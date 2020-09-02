@@ -27,8 +27,12 @@ function time_ago($time) {
 	return $data[0];
 }
 
-$time = strtotime("2020-02-17 17:44:00");
-echo time_ago($time);
+if(isset($_POST['submit'])) {
+	echo "Time Check for ";
+	$time = strtotime($_POST['date']);
+	echo time_ago($time);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -43,9 +47,9 @@ echo time_ago($time);
 	<div class="row">
 		<div class="one-third column">
 			<form method="POST">
-				<label for="exampleEmailInput">Your Date</label>
-				<input class="u-full-width" type="date" name="date">
-				<input class="button-primary" type="submit" name="submit" value="Submit">
+				<label for="date-input">Your Date</label>
+				<input class="u-full-width" type="text" name="date" placeholder="dd/mm/yyyy hh:mm:ss">
+				<input class="button-primary" type="submit" name="submit" value="Submit" id="date-input">
 			</form>
 		</div>
 	</div>
