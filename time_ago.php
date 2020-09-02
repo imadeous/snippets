@@ -27,15 +27,8 @@ function time_ago($time) {
 	return $data[0];
 }
 
-<<<<<<< HEAD
-
-if(isset($_POST['sumbit'])) {
-	$time = strtotime($_POST['time']);
-	$check_time = time_ago($time);
-} else {
-	$check_time = "Select a time and click Submit";
-}
-
+$time = strtotime("2020-02-17 17:44:00");
+echo time_ago($time);
 ?>
 
 <!DOCTYPE html>
@@ -43,20 +36,18 @@ if(isset($_POST['sumbit'])) {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>TIME AGO</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+	<title>Document</title>
 </head>
 <body>
-	<h1>Time Ago Function at work</h1>
-	<form action="" method="POST">
-		<label for="time">Check Date(date and time):</label>
-		<input type="datetime-local" id="time" name="time">
-		<input type="submit" name="submit" value="Submit">
-	</form>
-	<div><?php echo $check_time?></div>
+	<div class="row">
+		<div class="one-third column">
+			<form method="POST">
+				<label for="exampleEmailInput">Your Date</label>
+				<input class="u-full-width" type="date" name="date">
+				<input class="button-primary" type="submit" name="submit" value="Submit">
+			</form>
+		</div>
+	</div>
 </body>
 </html>
-=======
-$time = strtotime("2020-02-17 17:44:00");
-echo time_ago($time);
-?>
->>>>>>> 616937f62bce2f3c9d12d5d113627bfcf37789ec
