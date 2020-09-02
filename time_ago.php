@@ -27,6 +27,30 @@ function time_ago($time) {
 	echo $data[0];
 }
 
-$time = strtotime("2020-02-17 17:44:00");
-time_ago($time);
+
+if(isset($_POST['sumbit'])) {
+	$time = strtotime($_POST['time']);
+	$check_time = time_ago($time);
+} else {
+	$check_time = "Select a time and click Submit";
+}
+
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>TIME AGO</title>
+</head>
+<body>
+	<h1>Time Ago Function at work</h1>
+	<form action="" method="POST">
+		<label for="time">Check Date(date and time):</label>
+		<input type="datetime-local" id="time" name="time">
+		<input type="submit" name="submit" value="Submit">
+	</form>
+	<div><?php echo $check_time?></div>
+</body>
+</html>
