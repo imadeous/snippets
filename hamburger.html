@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+<title>Hamburger Practice</title>
+
+<style>
+html { 
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	height: 100vh;
+}
+
+
+.menu-btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 80px;
+	height: 80px;
+	border: 3px solid black;
+	transition: all .3s ease-in-out;
+	margin:20px;
+}
+
+.hamburger {
+	width: 50px;
+	height: 6px;
+	border-radius: 5px;
+	background-color: black;
+	transition: all .3s ease-in-out;
+}
+
+.hamburger::before, .hamburger::after {
+	width: 50px;
+	height: 6px;
+	border-radius: 5px;
+	background-color: black;
+	position: absolute;
+	content: '';
+	transition: all .3s ease-in-out;
+}
+
+.hamburger::before {
+	transform: translateY(-16px);
+}
+
+.hamburger::after {
+	transform: translateY(16px);
+}
+
+.menu-btn.open .hamburger {
+	background: transparent;
+	transform: translateX(-50px);
+}
+
+.menu-btn.open .hamburger::before {
+	transform: rotate(45deg) translate(35px, -35px);
+}
+
+.menu-btn.open .hamburger::after {
+	transform: rotate(-45deg) translate(35px, 35px);
+}
+
+.search {
+	background-color: black;
+	height: 25px;
+	width: 100vw;
+	height: 80px;
+	border: 3px solid black;
+	padding-left: 20px;
+	font-size: 2.5rem;
+	margin-right: 20px;
+}
+
+</style>
+</head>
+
+<body>
+<div class="menu-btn">
+	<div class="hamburger"></div>
+</div>
+<script>
+const menuBtn = document.querySelector(".menu-btn");
+let menuOpen = false;
+menuBtn.addEventListener('click', () => {
+	if(!menuOpen) {
+	   menuBtn.classList.add('open');
+	   menuOpen = true;
+ 	}	else {
+	   menuBtn.classList.remove('open');
+	   menuOpen = false;	
+	}
+});
+</script>
+
+</body>
+
+</html>
