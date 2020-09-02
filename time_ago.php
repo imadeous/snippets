@@ -21,7 +21,7 @@ function time_ago($time) {
 			} else if ($ago == 0) { //exception for 0 which is unlikely
 				$data[] = "Just now";
 			} else if ($ago < 0){ 				//negative time is only possible with time travel
-				$data[] = "Time traveller detected";
+				$data[] = "Error";
 			}
 	}
 	echo $data[0];
