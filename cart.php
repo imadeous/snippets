@@ -1,100 +1,76 @@
 <?php 
-session_start();
-require_once 'Cart.php';
-$Cart = new Cart();
-$cart = "";
+class Cart 
+{
+	public function add($item, $quantity, $id, $price)
+	{
+		if (array_key_exists($item, $_SESSION)) {
+			$_SESSION[$item]['quantity'] = $_SESSION[$item]['quantity'] + $quantity;
+		} else {
+			$_SESSION[$item] = 
+			[
+				'id'	   => $id,
+				'name'	   => $item,
+				'quantity' => $quantity, 
+				'price'    => $price
+			];
+		}
+	} 
 
-	if (isset($_POST['submit'])) {
-		$id = time();
-		$quantity = $_POST['quantity'];
-		$item = $_POST['item'];
-		$price = $_POST['price'];
-
-		$Cart->add($item, $quantity, $id, $price);
-		echo $Cart->quantify()." item(s) in cart<br>";
-	} else {
-		echo $Cart->quantify()." item(s) in cart";
+	public function increment($item) //increment the quantitiy of the item once
+	{
+		$_SESSION[$item]['quantity'] ++;
 	}
 
-	if (isset($_GET['decrement'])) {
-		$Cart->decrement($_GET['decrement']);
-		header('location:index.php');
-	}
-	if (isset($_GET['increment'])) {
-		$Cart->increment($_GET['increment']);
-		header('location:index.php');
-	}
-	if (isset($_GET['remove'])) {
-		$Cart->remove($_GET['remove']);
-		header('location:index.php');
+	public function decrement($item) //decrement the quantitiy of the item once
+	{	
+		($_SESSION[$item]['quantity'] == 1) ?  $_SESSION[$item]['quantity'] == 1 : $_SESSION[$item]['quantity'] --;
 	}
 
-
-	if (isset($_POST['empty'])) {
-		$Cart->discard();
-		header('location:index.php');
+	public function remove($item) //remove the item from cart
+	{
+		unset($_SESSION[$item]);
 	}
 
-	$cart = json_decode($Cart->load());
+	public function discard() //empty cart
+	{
+		session_unset();
+	}
+
+	public function load() //load cart in json encoded format
+	{
+		return ($_SESSION == NULL) ? 'Cart is Empty' : json_encode($_SESSION);
+	}
+
+	function quantify() //return subtotal for a given item
+	{
+		return count($_SESSION);
+	}
+
+	function subtotal($item) //return subtotal for a given item
+	{
+		$subtotal = $_SESSION[$item]['quantity'] * $_SESSION[$item]['price'];
+		return $subtotal;
+	}
+
+	function total() //return total amount for all the items in cart
+	{
+		$total['total'] = 0;
+		$total['charges'] = 0;
+
+
+		foreach ($_SESSION as $item) {
+			$total['total'] += $item['quantity'] * $item['price'];
+		}
+
+		if ($total['total'] <= 200) {
+			$total['charges'] = 20;
+			$total['total'] = $total['total'] + $total['charges'];
+		}
+		return $total;
+	}
+
+}
+
+
 
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Cart</title>
-</head>
-<body>
-	<form method="POST">
-		<input type="submit" name="empty" value="Empty Cart">
-	</form>
-
-	<h1>insert</h1>
-	<form method="POST" action="">
-		<input type="num" name="quantity" placeholder="Quantity" required>
-		<br>
-		<input type="text" name="item" placeholder="Item" required>
-		<br>
-		<input type="num" name="price" placeholder="Price" required>
-		<br>
-		<input type="submit" name="submit" value="Submit">
-	</form>
-
-	<?php if ($cart) { ?>
-	<h1>Cart</h1>
-	<table>
-		<tr>
-			<th>Qty</th>
-			<th>Item</th>
-			<th>Rate</th>
-			<th>Total</th>
-		</tr>
-	<?php 
-	
-	
-	foreach ($cart as $item) { ?>
-		<tr>
-			<td>
-				<a href="index.php?decrement=<?php echo $item->name; ?>"><input type="button" value="-"></a>
-				<?php echo $item->quantity; ?>
-				<a href="index.php?increment=<?php echo $item->name; ?>"><input type="button" value="+"></a>
-			</td>
-			<td><?php echo $item->name; ?></td>
-			<td><?php echo $item->price ?></td>
-			<td><?php echo $Cart->subtotal($item->name); ?></td>
-			<td> <a title="Remove" href="index.php?remove=<?php echo $item->name; ?>" style="text-decoration: none; color: red; font-weight: bold;">&times;</a></td>
-		</tr>
-	<?php } ?>
-		<tr>
-			<td colspan="3">Charges</td>
-			<td><?php echo $Cart->total()['charges']; ?></td>
-		</tr>
-		<tr>
-			<td colspan="3">Total</td>
-			<td><?php echo $Cart->total()['total']; ?></td>
-		</tr>
-	<?php } ?>
-	</table>
-
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-</body>
-</html>
