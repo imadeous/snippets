@@ -41,7 +41,7 @@ $cart = "";
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>Cart</title>
 </head>
 <body>
 	<form method="POST">

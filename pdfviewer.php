@@ -2,7 +2,7 @@
 
 // The location of the PDF file 
 // on the server 
-$filename = "document.pdf"; 
+$filename = "path/to/document.pdf"; 
 
 // Header content type 
 header("Content-type: application/pdf"); 
