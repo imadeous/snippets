@@ -20,14 +20,6 @@ class Cart
 					'subtotal' => ($_SESSION['cart'][$id]['quantity'] + $quantity) * $price,
 					'tax'	   => $tax
 				];
-			if($tax > 0)
-			{
-				$_SESSION['cart'][$id]['item_tax'] = $_SESSION['cart'][$id]['subtotal'] * $tax;
-				$_SESSION['cart'][$id]['item_total'] = $_SESSION['cart'][$id]['subtotal'] + $_SESSION['cart'][$id]['item_tax'];
-			} else {
-				$_SESSION['cart'][$id]['item_total'] = $_SESSION['cart'][$id]['subtotal'];
-			}
-
 		} else {
 			$_SESSION['cart'][$id] = 
 			[
@@ -38,16 +30,8 @@ class Cart
 				'subtotal' => $quantity * $price,
 				'tax'	   => $tax
 			];
-			if($tax > 0)
-			{
-				$_SESSION['cart'][$id]['item_tax'] = $_SESSION['cart'][$id]['subtotal'] * $tax;
-				$_SESSION['cart'][$id]['item_total'] = $_SESSION['cart'][$id]['subtotal'] + $_SESSION['cart'][$id]['item_tax'];
-			}  else {
-				$_SESSION['cart'][$id]['item_total'] = $_SESSION['cart'][$id]['subtotal'];
-			}
 		}
 		$this->totals();
-		
 	}
 
 	//remove item witd id = $id
@@ -68,8 +52,6 @@ class Cart
 	{
 		$_SESSION['cart'][$id]['quantity'] ++;
 		$_SESSION['cart'][$id]['subtotal'] = $_SESSION['cart'][$id]['quantity'] * $_SESSION['cart'][$id]['price'];
-		$_SESSION['cart'][$id]['item_tax'] = $_SESSION['cart'][$id]['subtotal'] * $_SESSION['cart'][$id]['tax'];
-		$_SESSION['cart'][$id]['item_total'] = $_SESSION['cart'][$id]['subtotal'] + $_SESSION['cart'][$id]['item_tax'];
 		$this->totals();
 	}
 
@@ -78,8 +60,6 @@ class Cart
 	{
 		($_SESSION['cart'][$id]['quantity'] <= 1) ?  $_SESSION['cart'][$id]['quantity'] == 1 : $_SESSION['cart'][$id]['quantity'] --;
 		$_SESSION['cart'][$id]['subtotal'] = $_SESSION['cart'][$id]['quantity'] * $_SESSION['cart'][$id]['price'];
-		$_SESSION['cart'][$id]['item_tax'] = $_SESSION['cart'][$id]['subtotal'] * $_SESSION['cart'][$id]['tax'];
-		$_SESSION['cart'][$id]['item_total'] = $_SESSION['cart'][$id]['subtotal'] + $_SESSION['cart'][$id]['item_tax'];
 		$this->totals();
 	}
 
@@ -88,7 +68,7 @@ class Cart
 	{
 		$subtotal = 0;
 		foreach ($_SESSION['cart'] as $item) {
-			$subtotal += round($item['item_total'], 2);
+			$subtotal += round($item['subtotal'], 2);
 		}
 		return $subtotal;
 	}
@@ -98,7 +78,7 @@ class Cart
 	{
 		$tax_total = 0;
 		foreach ($_SESSION['cart'] as $item) {
-			$tax_total += round($item['item_tax'], 2);
+			$tax_total += round($item['subtotal'] * $item['tax'], 2);
 		}
 		return $tax_total;
 	}
@@ -110,25 +90,32 @@ class Cart
 		return $grand_total;
 	}
 
+
+
 	//do all the totals at once and set them in sessio cart instance
 	public function totals()
 	{
-		$_SESSION['cart']['subtotal'] = $this->subtotal();
-		$_SESSION['cart']['tax_total'] = $this->tax_total();
 		$_SESSION['cart']['grand_total'] = $this->grand_total();
+		$_SESSION['cart']['tax_total'] = $this->tax_total();
+		$_SESSION['cart']['subtotal'] = $this->subtotal();
+	}
+
+	public function load()
+	{
+		return json_encode(array_reverse($_SESSION['cart']));
 	}
 
 }
 
 
 // instentiation
-// $Cart = new Cart();
+$Cart = new Cart();
 
 //add function call(taxed)
-// $Cart->add("LOREM", "Tuna", 1, 200, 0.06);
+$Cart->add("LOREM", "Tuna", 1, 100, 0.06);
 
 //add function call(non-taxed)
-// $Cart->add("IPSUM", "Skipjack", 1, 300);
+$Cart->add("IPSUM", "Skipjack", 1, 100);
 
 //remove item function call
 // $Cart->remove("LOREM");
@@ -140,11 +127,11 @@ class Cart
 // $Cart->decrement("LOREM");
 
 //empty cart
-//$Cart->discard();
+// $Cart->discard();
 
 // session_destroy();
 ?>
 
 <pre>
-<?php echo json_encode($_SESSION['cart']) ?>
+<?php echo $Cart->load() ?>
 </pre>
