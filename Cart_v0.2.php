@@ -3,6 +3,9 @@ error_reporting(0);
 session_start();
 class Cart 
 {
+	public function __construct(){
+		$this->totals();
+	}
 
 	//add item with $id, $name, $quantity, $price ad $tax (percentage in decimal eg: 0.06 for 6%)
 	public function add($id, $name, $quantity, $price, $tax = 0)
