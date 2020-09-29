@@ -67,9 +67,9 @@ class Cart
 	{
 		$subtotal = 0;
 		if(isset($_SESSION['cart'])) {
-			foreach ($_SESSION['cart'] as $item => $value) {
-				if(array_key_exists($item, $_SESSION['cart']) && $item != 'grand_total' && $item != 'tax_total'&& $item != 'subtotal') {
-					$subtotal += $_SESSION['cart'][$item]['subtotal'];
+			foreach ($_SESSION['cart'] as $key => $item) {
+				if(!is_float($item)) {
+					$subtotal += $item['subtotal'];
 				}
 			}
 			return round($subtotal, 2);
@@ -81,9 +81,9 @@ class Cart
 	{
 		$tax_total = 0;
 		if(isset($_SESSION['cart'])) {
-			foreach ($_SESSION['cart'] as $item => $value) {
-				if(array_key_exists($item, $_SESSION['cart']) && $item != 'grand_total' && $item != 'tax_total'&& $item != 'subtotal') {
-					$tax_total += $_SESSION['cart'][$item]['subtotal'] * $_SESSION['cart'][$item]['tax'];
+			foreach ($_SESSION['cart'] as $key => $item) {
+				if(!is_float($item)) {
+					$tax_total += $item['subtotal'] * $item['tax'];
 				}
 			}
 			return round($tax_total, 2);
@@ -124,11 +124,11 @@ class Cart
 $Cart = new Cart();
 
 //add function call(taxed)
-$Cart->add("LOREM", "Tuna", 2, 100, 0.06);
+// $Cart->add("LOREM", "Tuna", 1, 100, 0.06);
 
 //add function call(non-taxed)
-$Cart->add("IPSUM", "Skipjack", 1, 100.54);
-$Cart->add("Dolor", "Mahi Mahi", 2, 28.39, 0.06);
+// $Cart->add("IPSUM", "Skipjack", 1, 100);
+// $Cart->add("Dolor", "Mahi Mahi", 1, 100);
 
 //remove item function call
 // $Cart->remove("LOREM");
